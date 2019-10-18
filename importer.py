@@ -1,15 +1,16 @@
 from hashlib import md5
 from io import TextIOWrapper
+from typing import List
 
 import mutagen as mu
 
 
-def import_m3u(file: TextIOWrapper, args: dict) -> list:
+def import_m3u(file: TextIOWrapper, args: dict) -> List[dict]:
     """
     Return a list of files in the playlist and their information
     :param file: the m3u file
     :param args: additional options
-    :return:
+    :return: list of dicts of track information
     """
     first = file.readline().rstrip()
     if first == '#EXTM3U':
@@ -25,6 +26,7 @@ def import_m3u(file: TextIOWrapper, args: dict) -> list:
     tracks = []
     for line in file:
         line = line.rstrip()
+        # If we are on a #EXTINF line then parse it and continue
         if on_inf:
             line = line[7:]
             split_colon = line.split(':')
